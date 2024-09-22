@@ -38,7 +38,8 @@ class MainWindow(QMainWindow):
 
     def task1_function(self):
         # Long-running task 1
-        print("Task 1 started")
+        print("Task 1 started - stopped")
+        
 
     def task2_function(self):
         # Long-running task 2

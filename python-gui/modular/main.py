@@ -9,15 +9,13 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        gridlayout = QGridLayout()
+       
         self.button_is_checked = True
         self.setWindowTitle("Battery Management System")
         self.setMinimumSize(QSize(400, 300))
 
         self.threadpool = QThreadPool()
-        # Create a central widget to hold the layout
-        central_widget = QWidget(self)
-        self.setCentralWidget(central_widget)
+       
         
        
        
@@ -47,7 +45,20 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.button2)
         # self.setCentralWidget(button1)
         # self.setCentralWidget(button2)
-        gridlayout.addLayout(layout, 1, 1)
+        widget = QWidget()
+        widget.setLayout(layout)
+
+        ## Add a grid layout to the central widget
+        gridlayout = QGridLayout()
+        ##create a empty widget to fill the top space
+        gridlayout.addWidget(QWidget(), 0, 0)
+        ## Add bottomlayount with buttons and slider at bottom
+        
+        gridlayout.addWidget(widget, 3, 0)
+
+         # Create a central widget to hold the layout
+        central_widget = QWidget(self)
+        self.setCentralWidget(central_widget)
         central_widget.setLayout(gridlayout)
 
     def create_slider(self):

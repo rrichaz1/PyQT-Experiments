@@ -34,22 +34,24 @@ class MainWindow(QMainWindow):
         
         self.create_slider()
         
-        layout = QHBoxLayout()
+        bottomlayout = QHBoxLayout()
         
-        layout.addWidget(button1)
+        bottomlayout.addWidget(button1)
         # Add a stretchable space
-        layout.addStretch(1)  # Adjust the stretch factor as needed
-        layout.addWidget(self.slider)
+        bottomlayout.addStretch(1)  # Adjust the stretch factor as needed
+        bottomlayout.addWidget(self.slider)
 
 
-        layout.addWidget(self.button2)
+        bottomlayout.addWidget(self.button2)
         # self.setCentralWidget(button1)
         # self.setCentralWidget(button2)
-        widget = QWidget()
-        widget.setLayout(layout)
 
-        ## Add a grid layout to the central widget
-        gridlayout = QGridLayout()
+        ##create a widget to hold the layout
+        widget = QWidget()
+        widget.setLayout(bottomlayout)
+
+        ## Add a grid bottomlayout to the central widget
+        gridlayout = QGridlayout()
         ##create a empty widget to fill the top space
         gridlayout.addWidget(QWidget(), 0, 0)
         ## Add bottomlayount with buttons and slider at bottom

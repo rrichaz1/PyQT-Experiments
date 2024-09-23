@@ -1,32 +1,66 @@
 # main.py
 
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QHBoxLayout, QWidget 
-from PyQt5.QtCore import QThreadPool
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QHBoxLayout, QWidget, QGridLayout, QSlider
+from PyQt5.QtCore import QThreadPool, QSize, Qt
 from worker import Worker
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        gridlayout = QGridLayout()
+        self.button_is_checked = True
+        self.setWindowTitle("Battery Management System")
+        self.setMinimumSize(QSize(400, 300))
+
         self.threadpool = QThreadPool()
         # Create a central widget to hold the layout
         central_widget = QWidget(self)
         self.setCentralWidget(central_widget)
-        layout = QHBoxLayout()
-
-        button1 = QPushButton("Button 1")
+        
+       
+       
+        button1 = QPushButton("Start")
+        button1.setCheckable(True)
+        button1.setStyleSheet("background-color : green")
         button1.clicked.connect(self.run_task1)
+        button1.setChecked(self.button_is_checked)
 
-        button2 = QPushButton("Button 2")
-        button2.clicked.connect(self.run_task2)
+        self.button2 = QPushButton("Stop")
+        # self.button2.setCheckable(True)
+        # self.button2.clicked.connect(self.run_task2)
+        self.button2.clicked.connect(self.the_button_was_clicked)
+        self.button2.setChecked(self.button_is_checked)
+        self.button2.setStyleSheet("background-color : red")
+        
+        self.create_slider()
+        
+        layout = QHBoxLayout()
+        
         layout.addWidget(button1)
         # Add a stretchable space
         layout.addStretch(1)  # Adjust the stretch factor as needed
-        layout.addWidget(button2)
+        layout.addWidget(self.slider)
+
+
+        layout.addWidget(self.button2)
         # self.setCentralWidget(button1)
         # self.setCentralWidget(button2)
-        central_widget.setLayout(layout)
+        gridlayout.addLayout(layout, 1, 1)
+        central_widget.setLayout(gridlayout)
+
+    def create_slider(self):
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setMinimum(10)
+        self.slider.setMaximum(30)
+        self.slider.setSingleStep(3)
+        self.slider.valueChanged.connect(self.value_changed)
+        self.slider.sliderMoved.connect(self.slider_position)
+        self.slider.sliderPressed.connect(self.slider_pressed)
+        self.slider.sliderReleased.connect(self.slider_released)
+
+
 
     def run_task1(self):
         worker = Worker(self.task1_function)
@@ -44,6 +78,27 @@ class MainWindow(QMainWindow):
     def task2_function(self):
         # Long-running task 2
         print("Task 2 started")
+
+    def the_button_was_clicked(self):
+        self.button2.setText("You already clicked me.")
+        self.button2.setEnabled(False)
+
+        # Also change the window title.
+        self.setWindowTitle("My Oneshot App")  
+
+
+    def value_changed(self, i):
+        print(i)
+
+    def slider_position(self, p):
+        print("position", p)
+
+    def slider_pressed(self):
+        print("Pressed!")
+
+    def slider_released(self):
+        print("Released")    
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

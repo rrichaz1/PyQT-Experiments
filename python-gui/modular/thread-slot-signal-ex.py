@@ -2,6 +2,7 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
+import numpy as np
 import time
 import traceback, sys
 
@@ -55,7 +56,7 @@ class Worker(QRunnable):
         self.args = args
         self.kwargs = kwargs
         self.signals = WorkerSignals()
-        
+
         # Add the callback to our kwargs
         self.kwargs['progress_callback'] = self.signals.progress
 
@@ -93,13 +94,21 @@ class MainWindow(QMainWindow):
         b = QPushButton("DANGER!")
         b.pressed.connect(self.oh_no)
 
+        self.table = QTableWidget()
+       
+        self.table.setColumnCount(3)
+        self.table.setRowCount(5)
+
         layout.addWidget(self.l)
+        layout.addWidget(self.table)
         layout.addWidget(b)
 
         w = QWidget()
         w.setLayout(layout)
 
         self.setCentralWidget(w)
+        self.setFixedHeight(400)
+        self.setFixedWidth(600)
 
         self.show()
 
@@ -112,19 +121,33 @@ class MainWindow(QMainWindow):
         self.timer.start()
 
     def progress_fn(self, n):
+        print(f" passed n is {n}")
         print("%d%% done" % n)
+        self.update_table()
 
     def execute_this_fn(self, progress_callback):
         for n in range(0, 5):
             time.sleep(1)
+            print(f"Worker {n} is running!  {n*100/4}")
             progress_callback.emit(n*100/4)
 
         return "Done."
 
+    def update_table(self):
+        N=5
+        rand_vals = np.random.randint(1, 101, size=N)
+        # loop over the rows and populate the table
+        for i in range(N):
+            self.table.setItem(i, 0, QTableWidgetItem(str(i)))
+            self.table.setItem(i, 1, QTableWidgetItem(str(rand_vals[i])))
+            self.table.setItem(i, 2, QTableWidgetItem(str(rand_vals[i]*2)))
+        
+
     def print_output(self, s):
-        print(s)
+        print(f" s is {s}")
 
     def thread_complete(self):
+        self.update_table()
         print("THREAD COMPLETE!")
 
     def oh_no(self):

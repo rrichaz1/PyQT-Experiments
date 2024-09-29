@@ -122,14 +122,19 @@ class MainWindow(QMainWindow):
 
     def progress_fn(self, n):
         print(f" passed n is {n}")
-        print("%d%% done" % n)
+        print(f"Type of n: {type(n)}")  # Check the type of n
+        if isinstance(n, (int, float)):
+            print("%d%% done" % n)  # Only if n is a number
+        else:
+            print(f"Invalid value for n: {n}")
         self.update_table()
 
     def execute_this_fn(self, progress_callback):
         for n in range(0, 5):
             time.sleep(1)
-            print(f"Worker {n} is running!  {n*100/4}")
-            progress_callback.emit(n*100/4)
+            progress_value = int(n * 100 / 4)
+            print(f"Run {n} is  {progress_value}")
+            progress_callback.emit(progress_value)  # this is the signal to update the progress bar 
 
         return "Done."
 

@@ -51,7 +51,7 @@ class MainWindow(QMainWindow):
         widget.setLayout(bottomlayout)
 
         ## Add a grid bottomlayout to the central widget
-        gridlayout = QGridlayout()
+        gridlayout = QGridLayout()
         ##create a empty widget to fill the top space
         gridlayout.addWidget(QWidget(), 0, 0)
         ## Add bottomlayount with buttons and slider at bottom
@@ -68,6 +68,8 @@ class MainWindow(QMainWindow):
         self.slider.setMinimum(10)
         self.slider.setMaximum(30)
         self.slider.setSingleStep(3)
+        self.slider.setSizeIncrement(3, 0)
+        self.slider.setGeometry(10, 10, 200, 30)
         self.slider.valueChanged.connect(self.value_changed)
         self.slider.sliderMoved.connect(self.slider_position)
         self.slider.sliderPressed.connect(self.slider_pressed)

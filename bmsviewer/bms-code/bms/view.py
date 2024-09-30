@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QHBoxLayout,
 from PyQt5.QtCore import QThreadPool, Qt
 from worker import Worker
 import sys
+from heatmap import HeatmapWidget   
 
 class View(QMainWindow):
 
@@ -18,6 +19,7 @@ class View(QMainWindow):
         self.create_labels() # calls the create_labels function
         self.create_slider() # calls the create_slider function
         self.set_layout() # calls the set_layout function to add buttons and slider to the layout
+        self.heatmap = HeatmapWidget()
 
         central_widget = QWidget(self)
         gridLayout = QGridLayout()

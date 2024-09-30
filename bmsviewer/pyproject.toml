@@ -41,6 +41,10 @@ cli = [
 addopts = [
     "--import-mode=importlib",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+
 [project.urls]
 Homepage = "https://example.com"
 Documentation = "https://readthedocs.org"

@@ -26,10 +26,12 @@ class TimedWorker(QRunnable):
         """Run the data processing function repeatedly every second."""
         print("Worker started")
         try:
+           
             while self.is_running:
                 result = self.fn(*self.args, **self.kwargs)  # Call the heatmap processing function
                 self.signals.result.emit(result)  # Emit the result (heatmap data) to the UI
                 time.sleep(1)  # Wait for 1 second between updates
+                print("Worker flag set to ", self.is_running)
 
         except Exception as e:
             exctype, value, tb = sys.exc_info()
@@ -39,7 +41,9 @@ class TimedWorker(QRunnable):
 
     def stop(self):
         """Stop the worker loop."""
+        print("Worker stopped")
         self.is_running = False
+        print("Worker stopped flag set to ", self.is_running)
 
 
 class Worker(QRunnable):

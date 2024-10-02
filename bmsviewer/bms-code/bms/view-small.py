@@ -36,9 +36,16 @@ class View(QMainWindow):
 
     def start_worker(self):
         """Start the worker to refresh data every second."""
-        self.worker = TimedWorker(self.heatmap.refresh_data)  # Create worker with refresh_data function
+        self.worker = TimedWorker(self.refresh_data)  # Create worker with refresh_data function
         self.worker.signals.result.connect(self.heatmap.plot)  # Update heatmap in main thread
         self.threadpool.start(self.worker)
+
+    def refresh_data(self):
+        """Simulate refreshing data every second."""
+        import numpy as np
+        random_data = np.random.rand(10, 10) * 100  # Generate random heatmap data
+        print("Refreshing heatmap data...")
+        return random_data    
 
     def stop_worker(self):
         """Stop the background worker."""

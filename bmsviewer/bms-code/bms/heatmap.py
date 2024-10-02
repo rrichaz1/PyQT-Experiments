@@ -34,11 +34,12 @@ class HeatmapWidget(QWidget):
                 #     item.setBackground(QBrush(QColor(255, 255, 255)))  # White for other values
                 self.table.setItem(i, j, item)
 
+  
     def refresh_data(self):
         """Simulate refreshing data every second."""
         random_data = np.random.rand(10, 10) * 100  # Generate random heatmap data
         print("Refreshing heatmap data...")
-        return random_data
+        return random_data   
 
 
     def print_result(self, s):

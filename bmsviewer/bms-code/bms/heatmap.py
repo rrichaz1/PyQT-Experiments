@@ -1,15 +1,35 @@
 import sys
 import numpy as np
 import time
-from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
-from PyQt5.QtGui import QColor, QBrush
+from PyQt5.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget, QStyledItemDelegate, QStyleOptionViewItem, QStyle
+from PyQt5.QtGui import QColor, QBrush, QPen, QPainter
 
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, QModelIndex, Qt
+
+class BorderDelegate(QStyledItemDelegate):
+    def paint(self, painter: QPainter, option: QStyleOptionViewItem, index: QModelIndex):
+        # Draw the default item content
+        super().paint(painter, option, index)
+
+        # Draw the border
+        if option.state & QStyle.State_Selected:
+            # Adjust the border color for selected items
+            painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        else:
+            painter.setPen(QPen(Qt.gray, 1, Qt.SolidLine))
+
+        rect = option.rect.adjusted(1, 1, -1, -1)  # Adjust for border width
+        painter.drawRect(rect)
 
 class HeatmapWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.table = QTableWidget(10, 10)
+
+        # Apply the custom delegate to the table
+        delegate = BorderDelegate(self.table)
+        self.table.setItemDelegate(delegate)
+
         layout = QVBoxLayout()
         layout.addWidget(self.table)
         self.setLayout(layout)

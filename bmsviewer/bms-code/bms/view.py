@@ -23,7 +23,7 @@ class View(QMainWindow):
 
         central_widget = QWidget(self)
         gridLayout = QGridLayout()
-        gridLayout.addWidget(QWidget(), 0, 0) # fills row 1 for now
+        gridLayout.addWidget(self.heatmap, 0, 0) # fills row 1 for now
         gridLayout.addWidget(QWidget(), 1, 0) #fills row 2 for now
         gridLayout.addWidget(QWidget(), 2, 0) #fills row 3 for now
         gridLayout.addWidget(widget, 3, 0) # adds the widget with buttons and slider to row 4
@@ -31,6 +31,15 @@ class View(QMainWindow):
         central_widget = QWidget(self) # creates a central widget to hold the grid layout
         self.setCentralWidget(central_widget) # sets the central widget to the central widget
         central_widget.setLayout(gridLayout) # sets the layout of the central widget to the grid layout
+        # self.start_worker()
+
+    
+    def start_worker(self):
+        worker = Worker(self.heatmap.refresh_data)
+        worker.signals.result.connect(self.heatmap.print_result)
+        worker.signals.finished.connect(self.heatmap.complete)
+        # worker.signals.progress.connect(self.heatmap.progress_fn)
+        self.threadpool.start(worker)    
 
     def create_labels(self):
         self.amperage = QLabel("Amps") # creates a label stating the slider changes the amperage
@@ -82,20 +91,26 @@ class View(QMainWindow):
         self.bottomLayout.addWidget(self.stopButton) # adds the stop button to the bottom layout
     
     def start_button_clicked(self):
-        worker = Worker(self.start_thread_function) # creates a worker object with the start_thread_function
-        self.threadpool.start(worker) # starts the worker
+        # worker = Worker(self.start_thread_function) # creates a worker object with the start_thread_function
+        # worker.signals.result.connect(self.heatmap.print_result)
+        # worker.signals.finished.connect(self.heatmap.complete)
+        # self.threadpool.start(worker) # starts the worker
+        print("Start button clicked") # prints to the console when the start button is clicked
     
     def stop_button_clicked(self):
-        worker = Worker(self.stop_thread_function) # creates a worker object with the stop_thread_function
-        self.threadpool.start(worker) # starts the worker
+        # worker = Worker(self.stop_thread_function) # creates a worker object with the stop_thread_function
+        # self.threadpool.start(worker) # starts the worker
+        print("Stop button clicked")
 
     def reset_button_clicked(self):
-        worker = Worker(self.reset_thread_function) # creates a worker object with the reset_thread_function
-        self.threadpool.start(worker) # starts the worker
+        # worker = Worker(self.reset_thread_function) # creates a worker object with the reset_thread_function
+        # self.threadpool.start(worker) # starts the worker
+        print("Reset button clicked")
 
     def quit_button_clicked(self):
-        worker = Worker(self.quit_thread_function) # creates a worker object with the quit_thread_function
-        self.threadpool.start(worker) # starts the worker
+        # worker = Worker(self.quit_thread_function) # creates a worker object with the quit_thread_function
+        # self.threadpool.start(worker) # starts the worker
+        print("Quit button clicked")
 
     def start_thread_function(self):
         print("Start button clicked") # prints to the console when the start button is clicked

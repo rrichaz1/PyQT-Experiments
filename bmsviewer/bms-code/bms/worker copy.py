@@ -1,45 +1,34 @@
-from PyQt5.QtCore import pyqtSignal, QObject, QRunnable, pyqtSlot
-import numpy as np
+from PyQt5.QtCore import QRunnable, pyqtSignal, pyqtSlot, QObject
 import time
-import sys
+import traceback, sys
 
 class WorkerSignals(QObject):
-    """Defines the signals available from a running worker thread."""
+    '''
+    Defines the signals available from a running worker thread.
+    Needs to extend QObject to be able to use pyqtSignal
+    QThread is not a QObject, so we need to create a QObject to use pyqtSignal
+
+    Supported signals are:
+
+    finished
+        No data
+
+    error
+        tuple (exctype, value, traceback.format_exc() )
+
+    result
+        object data returned from processing, anything
+
+    progress
+        int indicating % progress    
+
+    '''
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
-    result = pyqtSignal(object)  # To pass the heatmap data back to the UI thread
-    progress = pyqtSignal(int)
+    result = pyqtSignal(object)
+    # progress = pyqtSignal(int)
 
-class TimedWorker(QRunnable):
-    """Worker thread that periodically refreshes data."""
-    
-    def __init__(self, fn, *args, **kwargs):
-        super(TimedWorker, self).__init__()
-        self.fn = fn  # Function to execute (data processing)
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
-        self.is_running = True  # Flag to control the loop
 
-    @pyqtSlot()
-    def run(self):
-        """Run the data processing function repeatedly every second."""
-        print("Worker started")
-        try:
-            while self.is_running:
-                result = self.fn(*self.args, **self.kwargs)  # Call the heatmap processing function
-                self.signals.result.emit(result)  # Emit the result (heatmap data) to the UI
-                time.sleep(1)  # Wait for 1 second between updates
-
-        except Exception as e:
-            exctype, value, tb = sys.exc_info()
-            self.signals.error.emit((exctype, value, tb))
-        finally:
-            self.signals.finished.emit()
-
-    def stop(self):
-        """Stop the worker loop."""
-        self.is_running = False
 
 
 class Worker(QRunnable):
@@ -89,4 +78,4 @@ class Worker(QRunnable):
         finally:
             self.signals.finished.emit()  # Done    
 
-            
+    

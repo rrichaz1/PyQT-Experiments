@@ -20,6 +20,7 @@ class TimedWorker(QRunnable):
         self.kwargs = kwargs
         self.signals = WorkerSignals()
         self.is_running = True  # Flag to control the loop
+        print("Worker initialized")
 
     @pyqtSlot()
     def run(self):

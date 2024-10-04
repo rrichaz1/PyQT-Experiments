@@ -41,8 +41,9 @@ class HeatmapWidget(QWidget):
     def plot(self, heatmapData):
         """Update the table with new heatmap data."""
         print("Plotting heatmap data...")
-        for i in range(10):
-            for j in range(10):
+        rows, cols = heatmapData.shape
+        for i in range(rows):
+            for j in range(cols):
                 item = QTableWidgetItem(f"{heatmapData[i][j]:.2f}")
                 value = heatmapData[i][j]
                  # Apply color based on the value
@@ -50,8 +51,8 @@ class HeatmapWidget(QWidget):
                     item.setBackground(QBrush(QColor(255, 0, 0)))  # Red for values > 70
                 elif value < 30:
                     item.setBackground(QBrush(QColor(0, 0, 255)))  # Blue for values < 30
-                # else:
-                #     item.setBackground(QBrush(QColor(255, 255, 255)))  # White for other values
+                else:
+                    item.setBackground(QBrush(QColor(0, 0, 0)))  # Black for other values
                 self.table.setItem(i, j, item)
 
   

@@ -1,8 +1,9 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QHBoxLayout, QGridLayout, QWidget, QSlider, QLabel
-from PyQt5.QtCore import QThreadPool, Qt
-from worker import Worker
+from PyQt5.QtCore import QThreadPool, Qt, QTimer
+from worker import TimedWorker, Worker
 import sys
-from heatmap import HeatmapWidget   
+from heatmap import HeatmapWidget  
+import numpy as np 
 
 class View(QMainWindow):
 
@@ -31,16 +32,24 @@ class View(QMainWindow):
         central_widget = QWidget(self) # creates a central widget to hold the grid layout
         self.setCentralWidget(central_widget) # sets the central widget to the central widget
         central_widget.setLayout(gridLayout) # sets the layout of the central widget to the grid layout
-        # self.start_worker()
+          # Delayed start of worker
+        QTimer.singleShot(0, self.start_worker)
+        self.show()
 
     
     def start_worker(self):
-        worker = Worker(self.heatmap.refresh_data)
-        worker.signals.result.connect(self.heatmap.print_result)
-        worker.signals.finished.connect(self.heatmap.complete)
+        worker = TimedWorker(self.refresh_data)
+        worker.signals.result.connect(self.heatmap.plot)
+       
         # worker.signals.progress.connect(self.heatmap.progress_fn)
         self.threadpool.start(worker)    
 
+    def refresh_data(self):
+        print("Call refresh data")
+        random_data = np.random.rand(10, 10) * 100
+        print("Refreshing heatmap data...")
+        return random_data
+    
     def create_labels(self):
         self.amperage = QLabel("Amps") # creates a label stating the slider changes the amperage
         self.amperage.setAlignment(Qt.AlignVCenter) # aligns the label to the center
@@ -91,10 +100,10 @@ class View(QMainWindow):
         self.bottomLayout.addWidget(self.stopButton) # adds the stop button to the bottom layout
     
     def start_button_clicked(self):
-        # worker = Worker(self.start_thread_function) # creates a worker object with the start_thread_function
-        # worker.signals.result.connect(self.heatmap.print_result)
+        worker = Worker(self.start_thread_function) # creates a worker object with the start_thread_function
+        worker.signals.result.connect(self.print_result)
         # worker.signals.finished.connect(self.heatmap.complete)
-        # self.threadpool.start(worker) # starts the worker
+        self.threadpool.start(worker) # starts the worker
         print("Start button clicked") # prints to the console when the start button is clicked
     
     def stop_button_clicked(self):
@@ -113,7 +122,7 @@ class View(QMainWindow):
         print("Quit button clicked")
 
     def start_thread_function(self):
-        print("Start button clicked") # prints to the console when the start button is clicked
+        return("Start button clicked") # prints to the console when the start button is clicked
 
     def stop_thread_function(self):
         print("Stop button clicked") # prints to the console when the stop button is clicked
@@ -136,6 +145,9 @@ class View(QMainWindow):
     
     def slider_released(self):
         print("Slider released") # prints to the console when the slider is released
+
+    def print_result(self, s):
+        print(s)    
 
 
 if __name__ == '__main__':

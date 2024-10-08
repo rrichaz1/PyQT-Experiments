@@ -1,12 +1,15 @@
-from PyQt5.QtWidgets import QSlider, QApplication, QVBoxLayout, QLabel, QWidget
+from PyQt5.QtWidgets import QSlider, QApplication, QHBoxLayout, QLabel, QWidget
 from PyQt5.QtCore import Qt
 
+#replace magic numbers with constants
+
+
 class DecimalSlider(QSlider):
-    def __init__(self, orientation=Qt.Horizontal, decimals=2, scale=100, *args, **kwargs):
-        super().__init__(orientation, *args, **kwargs)
+    def __init__(self, orientation=Qt.Horizontal, decimals=2, scale=100):
+        super().__init__(orientation)
         self.decimals = decimals  # Number of decimal places
         self.scale = scale  # Scaling factor to simulate decimal values
-        self.valueChanged.connect(self.update_label)
+        
 
     def value(self):
         """Override value() to return a scaled decimal value."""
@@ -26,7 +29,7 @@ class DecimalSlider(QSlider):
     def update_label(self, value):
         """Update label with decimal value whenever the slider is changed."""
         decimal_value = self.value()
-        print(f"Slider Value: {decimal_value:.{self.decimals}f}")
+        print(f"Slider Value: {decimal_value:.2f}")
 
 class MainWindow(QWidget):
     def __init__(self):
@@ -36,12 +39,13 @@ class MainWindow(QWidget):
         self.slider = DecimalSlider(Qt.Horizontal, decimals=2, scale=100)
         self.slider.setRange(0, 1)  # Set range from 0.0 to 1.0 (scaled internally)
         self.slider.setValue(0.5)   # Set initial value to 0.5
+        self.slider.valueChanged.connect(self.update_label)
         
         # Create Label to display value
         self.label = QLabel(f"Value: {self.slider.value():.2f}")
 
         # Layout
-        layout = QVBoxLayout()
+        layout = QHBoxLayout()
         layout.addWidget(self.slider)
         layout.addWidget(self.label)
         self.setLayout(layout)
@@ -50,7 +54,7 @@ class MainWindow(QWidget):
         self.slider.valueChanged.connect(self.update_label)
 
     def update_label(self, value):
-        decimal_value = self.slider.value()
+        decimal_value = self.slider.value()/100
         self.label.setText(f"Value: {decimal_value:.2f}")
 
 if __name__ == '__main__':

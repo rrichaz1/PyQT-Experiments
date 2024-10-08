@@ -51,8 +51,8 @@ class HeatmapWidget(QWidget):
                     item.setBackground(QBrush(QColor(255, 0, 0)))  # Red for values > 70
                 elif value < 30:
                     item.setBackground(QBrush(QColor(0, 0, 255)))  # Blue for values < 30
-                else:
-                    item.setBackground(QBrush(QColor(0, 0, 0)))  # Black for other values
+                # else:
+                #     item.setBackground(QBrush(QColor(0, 0, 0)))  # Black for other values
                 self.table.setItem(i, j, item)
 
   

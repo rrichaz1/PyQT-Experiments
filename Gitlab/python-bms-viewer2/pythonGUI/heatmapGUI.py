@@ -24,7 +24,7 @@ class HeatmapGUI(QMainWindow):
         self.voltage_heatmap = Heatmap(3.0, 4.2, "Voltage") 
         self.temperature_heatmap = Heatmap(0.0, 60.0, "Temperature") 
 
-        central_widget = QWidget(self) 
+        
         gridLayout = QGridLayout() 
         gridLayout.addWidget(QWidget(), 0, 0) 
         gridLayout.addWidget(self.voltage_heatmap, 1, 0)
@@ -100,28 +100,33 @@ class HeatmapGUI(QMainWindow):
     def refresh_voltage_data(self):
         """Simulate refreshing voltage data every 3 seconds."""
         random_data = (np.random.rand(12, 12) * 2.5) + 2.5
-        self.voltage_heatmap.plot(random_data) 
+        return random_data
 
     def refresh_temperature_data(self):
         """Simulate refreshing temperature data every 3 seconds."""
+
         random_data = (np.random.rand(12, 12) * 80) - 10
-        self.temperature_heatmap.plot(random_data)
+        return random_data
     
     def start_button_clicked(self):
         worker = Worker(self.start_thread_function) 
         self.threadpool.start(worker) 
+        print("start")
     
     def stop_button_clicked(self):
-        worker = Worker(self.stop_thread_function) 
-        self.threadpool.start(worker) 
+        # worker = Worker(self.stop_thread_function) 
+        # self.threadpool.start(worker) 
+        print("stop")
 
     def reset_button_clicked(self):
-        worker = Worker(self.reset_thread_function) 
-        self.threadpool.start(worker) 
+        # worker = Worker(self.reset_thread_function) 
+        # self.threadpool.start(worker) 
+        print("reset")
 
     def quit_button_clicked(self):
-        worker = Worker(self.quit_thread_function) 
-        self.threadpool.start(worker) 
+        # worker = Worker(self.quit_thread_function) 
+        # self.threadpool.start(worker) 
+        print("quit")
 
     def start_thread_function(self):
         print("Start button clicked") 

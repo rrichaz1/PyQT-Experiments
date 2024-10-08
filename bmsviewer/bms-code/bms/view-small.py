@@ -4,6 +4,7 @@ from PyQt5.QtCore import QThreadPool
 from heatmap import HeatmapWidget   
 
 from worker import TimedWorker
+import numpy as np
 
 
 class View(QMainWindow):
@@ -42,7 +43,7 @@ class View(QMainWindow):
 
     def refresh_data(self):
         """Simulate refreshing data every second."""
-        import numpy as np
+
         random_data = np.random.rand(10, 10) * 100  # Generate random heatmap data
         print("Refreshing heatmap data...")
         return random_data    

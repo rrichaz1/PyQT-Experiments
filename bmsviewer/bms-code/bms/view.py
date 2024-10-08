@@ -38,11 +38,11 @@ class View(QMainWindow):
 
     
     def start_worker(self):
-        worker = TimedWorker(self.refresh_data)
-        worker.signals.result.connect(self.heatmap.plot)
+        self.timedworker = TimedWorker(self.refresh_data)
+        self.timedworker .signals.result.connect(self.heatmap.plot)
        
         # worker.signals.progress.connect(self.heatmap.progress_fn)
-        self.threadpool.start(worker)    
+        self.threadpool.start( self.timedworker )    
 
     def refresh_data(self):
         print("Call refresh data")
@@ -117,8 +117,9 @@ class View(QMainWindow):
         print("Reset button clicked")
 
     def quit_button_clicked(self):
-        # worker = Worker(self.quit_thread_function) # creates a worker object with the quit_thread_function
-        # self.threadpool.start(worker) # starts the worker
+        if self.timedworker:
+                self.timedworker.stop()  # Stop the worker thread gracefully
+        self.threadpool.waitForDone()  # Wait for all threads to finish
         print("Quit button clicked")
 
     def start_thread_function(self):
@@ -149,6 +150,14 @@ class View(QMainWindow):
     def print_result(self, s):
         print(s)    
 
+    def closeEvent(self, event):
+            
+            print("Close event")
+            """Handle the window close event."""
+            if self.timedworker:
+                self.timedworker.stop()  # Stop the worker thread gracefully
+            self.threadpool.waitForDone()  # Wait for all threads to finish
+            event.accept()  # Accept the close event to close the window
 
 if __name__ == '__main__':
     app = QApplication([])

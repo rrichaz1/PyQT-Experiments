@@ -26,6 +26,7 @@ class Heatmap(QWidget):
         self.min_safe = min
 
         self.title = title
+        print("Creating heatmap ",title)
         self.table_title = QLabel(self.title + " Heatmap")
         self.table_title.setStyleSheet("font-size: 18px;")
         self.table_title.setAlignment(Qt.AlignCenter)
